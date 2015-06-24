@@ -1,0 +1,19 @@
+<div id="noticia-$ID" class="col-sm-4" style="height: 500px;">
+    <img class="img-circle img-responsive img-center" src="$Image" alt="" width="100" height="100">
+    <h3>$Title</h3>
+    <p>$Content</p>
+            
+    <div class="row">
+        <a href="myconection.cfc?method=viewNoticia&noticia=$ID" class="btn btn-success" data-toggle="modal" data-target="#viewNoticia">View more...</a>
+    </div>
+    <div class="pull-left">
+        <div class="">Creado por: $Name</div>
+        <div class=""align=left><b>Fecha:</b>$FechaS</div>
+    </div>
+    <div class="pull-right">
+    
+    <a href="myconection.cfc?method=deleteNoticia&noticia=$ID&usuario=$Usuario" class="btn btn-danger pull-left glyphicon glyphicon-trash" data-delete="true" data-confirm="true"></a>
+    <a href="myconection.cfc?method=editNoticia&noticia=$ID&usuario=$Usuario" class="btn btn-success pull-left glyphicon glyphicon-edit" data-edit="true" data-target="#viewNoticia"></a>
+    <a href="myconection.cfc?method=likeNoticia&noticia=$ID&usuario=$Usuario" class="btn btn-primary pull-left glyphicon glyphicon-thumbs-up" data-like="true">Like $Likes</a>
+    </div>
+</div>

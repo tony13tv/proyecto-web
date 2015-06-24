@@ -1,0 +1,97 @@
+header
+{
+ background: #2c3e50;
+ color: #fff;
+
+}
+.fondo
+{
+ background: #2c3e50;
+
+
+}
+
+.header1
+{
+ background:#00899d ;
+ color:#fff;
+    border-width:5px;	
+    border-style:double;
+    border-color:black;
+    background-image:url(images/sun.jpg);
+    background-repeat: no-repeat;
+background-position: top center;
+}
+#container {
+width: 940px;
+margin: 0 auto;
+}
+
+}
+.derecha
+{
+text-align:center;
+
+}
+
+.main
+{
+ background: #f2f2f2;
+ 
+
+}
+
+.color1
+{
+ background: #a81414;
+ color: #fff;
+
+}
+
+.color2
+{
+ background:  #0095b6;
+
+
+}
+
+.otro
+{
+ background:  #00899d;
+ color: #fff;
+
+}
+
+
+aside
+{
+ background: #c0392b;
+ color: #fff;
+
+}
+
+
+.footer
+{
+ background: #16a085;
+ color: #fff;
+
+}
+
+body
+{
+ /*background: #000;*/
+
+
+}
+
+
+#mainrow1 h2, #mainrow1 p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#mainrow1 p {
+    height: 4.5em;
+}
+

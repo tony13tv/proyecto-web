@@ -1,0 +1,22 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="myconection.cfc?method=saveMarker" method="GET" data-edit="true">
+        <div class="modal-header"><h2>Nuevo Marcador</h2></div>
+        <div class="modal-body clearfix">
+            <input type="hidden" value="$Usuario" name="usuario">
+            <input type="hidden" value="$Lat" name="lat">
+            <input type="hidden" value="$Lng" name="lng">
+                <div class="col-xs-6">
+                    <label>Titulo</label>
+                   <input name="titulo"/>
+                </div>
+                <div class="col-xs-6">
+                    <label>Descripcion</label>
+                    <textarea name="descripcion">
+                    </textarea>
+                </div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-success">Guardar</button><a class="btn btn-default" data-dismiss="modal">Cancelar</a></div>
+            </form>
+    </div>
+</div>

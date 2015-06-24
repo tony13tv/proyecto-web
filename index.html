@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Turismo Honduras</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/business-frontpage.css" rel="stylesheet">
+     <link href="/grid.css" rel="stylesheet">
+    <link href="calendario_dw/calendario_dw-estilos.css" type="text/css" rel="STYLESHEET"> <!-- Referencia a css para calendario -->
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+      <!-- Latest compiled and minified CSS -->
+    <script>
+         $(document).ready(function(){
+     
+    
+       
+     $('#bt_log2').click(function(){
+         var email = $('#email_id').val();
+         var pass = $('#pass_id').val();
+      
+     
+        var myCFC = "myconection.cfc"; //este es el nombre de miarch .cfc
+        var myMethod={
+        method:'LogUsuario', //Nombre del metodo en el cfc
+           
+            usuario_email: email,
+            usuario_pass: pass  
+        };
+        
+        $.getJSON(myCFC, myMethod, function(data){
+          
+   
+         //var respuesta = data.DATA[0][0];
+            //console.log(respuesta)
+            //alert("Esto trae respuesta: "+respuesta.length) //PROBLEMAS AQUI CON ESTE IF-----------------------------
+                  if(data.DATA.length==0){
+                 
+            
+                       alert("Email o Contraseña Inválidos!");
+             }
+            else 
+            {        var respuesta = data.DATA[0][0]; 
+                window.location.replace("/Prueba1/principal.html?"+respuesta);
+            };
+            
+                
+                }); //Fin del getJASON
+       
+         
+         
+          }); //Fin del Boton
+             
+             
+             
+             
+              }); //Fin del document Ready
+        </script>
+ 
+
+</head>
+
+<body bgcolor="#000000">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" color = "blue" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Turismo Honduras</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+             <form class="navbar-form navbar-right">
+            <div class="form-group">
+              <input type="text" placeholder="Email" class="form-control" id="email_id">
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Password" class="form-control" id="pass_id">
+            </div>
+                  <div class="form-group">
+            <button type="button" class="btn btn-success" id ="bt_log2">Sign in</button>  or
+                 <a href="/Prueba1/formulario.html">Register</a>
+                 </div>
+                 
+          </form>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+ <div class = "well">
+       
+     <center><img class="first-slide" src="images/copan2.jpg" alt="First slide"></center>
+     </div>
+    <!-- Image Background Page Header -->
+    <!-- Note: The background image is set within the business-casual.css file. 
+      <!--
+    <header class="business-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="tagline">Business Name or Tagline</h1>
+                    <button type="submit" class="btn btn-success" id ="bt_log2">Sign in</button>  or
+                </div>
+            </div>
+        </div>
+    </header>
+-->
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Why Honduras?</h2>
+                <p alling= "center">Honduras is a vibrant country, brimming with clear turquoise waters, pristine beaches, lush jungles, breathtaking mountains, challenging rivers, and fascinating ancient ruins.
+
+In addition to Honduras travel destinations and popular attractions, the country offers opportunities for business and trade. San Pedro Sula's "tax free zone" allows international companies to manufacture goods at attractive rates. Located at the very center of the Americas, Honduras operates ports in San Lorenzo and Puerto Cortes, which provides a thoroughfare between the Atlantic and Pacific Oceans, and expedites the transit of merchandise.</p>
+                <p>
+            <a class="btn btn-success btn-lg" href="http://www.honduras.com/honduras/">Continue &raquo;</a>
+                </p>
+            </div>
+          
+        </div>
+        <!-- /.row -->
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <img class="img-circle img-responsive img-center" src="images/guacamaya2_peque.jpg" alt=""  width= "300" heigth = "300">
+                <h2>Ave Nacional</h2>
+                <p>La Guacamaya Roja, comunmente llamada Guara Roja. Su nombre cientifico es Ara Macao.
+
+Fue declarada Ave Nacional el 28 de Junio de 1993 bajo Decreto Legislativo No. 36.
+
+La Guacamaya o Guara Roja es un ave que pertenece a la familia de las Psitácidas y su extenso hábitat comprende bosques desde México hasta Bolivia.
+
+En Honduras nuestra hermosa Ave Nacional habita especialmente en las selvas del Departamento de Gracias a Dios, mas conocido como La Mosquitia hondureña.</p>
+            </div>
+            <div class="col-sm-4">
+                <img class="img-circle img-responsive img-center" src="images/copan1peque.jpg" alt="" width= "300" heigth = "300">
+                <h2>Ruinas de Copán</h2>
+                <p>Copán Ruinas ofrece muchísimas actividades turísticas más que las ruinas mayas. Aquí puede visitar y disfrutar de la naturaleza, por lo cual usted debe prolongar su visita, considerando por lo menos una semana. Aquí puede realizar ecoturismo, hiking, trekking, contemplación, visitar las fincas de café, observar la avifauna y la fauna mamífera, la ruta de las flores, visitar los pueblos maya chortí, asistir a una fiesta copaneca, pasear en moto o en bicicleta
+                </p>
+            </div>
+            <div class="col-sm-4">
+                <img class="img-circle img-responsive img-center" src="images/trujillo1peque.jpg" alt=""  width= "300" heigth = "300">
+                <h2>Trujillo</h2>
+                <p>Fue una de las primeras ciudades fundadas por los españoles al momento de la Conquista.  La profundidad de su bahía la convirtió rápidamente en un destino ideal para la navegación de los grandes barcos mercantes españoles. Historias de piratas, corsarios, compañías bananeras y un rico pasado precolombino son parte de los atractivos que posee Trujillo.  Ahora con su naturaleza exuberante rodeándola, la ciudad  puerto es la oportunidad para descubrir nuevas fronteras.</p>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Turismo Honduras 2015</p>
+                </div>
+            </div>
+            <!-- /.row -->
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+  
+    
+     <!------------------------------------------------------ FOOTER -------------------------------------------------------------->
+<div class="container">
+      <footer>
+       <p class="pull-right"> <a href="#"> <button type="button" class="btn btn-primary glyphicon glyphicon-circle-arrow-up" data-dismiss="modal"> Back to Top</button></p>
+        <p >&copy; 2015 Company, Inc. &middot;</p>
+      </footer>
+   </div>
+   
+
+</body>
+
+</html>

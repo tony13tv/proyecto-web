@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Formulario</title>
+
+    <!-- Bootstrap -->
+   <link href="css/bootstrap.min.css" rel="stylesheet">
+   
+    <!--link href="MyCss/myStyleSheet.css" rel="stylesheet"-->
+      <link href="calendario_dw/calendario_dw-estilos.css" type="text/css" rel="STYLESHEET">
+    
+      
+   <style type="text/css">
+   body{
+      font-family: tahoma, verdana, sans-serif;
+   }
+   </style>
+   <script type="text/javascript" src="calendario_dw/jquery-1.4.4.min.js"></script>
+   <script type="text/javascript" src="calendario_dw/calendario_dw.js"></script>
+    
+      
+  
+   
+   <script type="text/javascript">
+   $(document).ready(function(){
+      $(".campofecha").calendarioDW();
+       
+       
+       
+       
+   });
+   </script>
+   
+      <script type="text/javascript">
+                  
+         //Acción del boton de Cancel
+         function functionGoHome()
+         {
+           
+            window.location ="index.html";
+         }     
+          
+          
+     
+      </script> 
+    
+      
+       
+    
+
+     <script> 
+        $(document).ready(function(){
+     
+
+       
+     $('#bt_save').click(function(){
+     
+                 
+         var name1 = $('#name1').val();
+         var last_name1 = $('#last_name1').val();
+         var email_id = $('#email_id').val();
+         var pais_id = $('#pais_id').val();
+         var acerca_id = $('#acerca_id').val();
+         var sexo_id = $('#sexo_id').val();
+         var trabajo_id = $('#trabajo_id').val();
+         var fecha_id = $('#fecha_id').val(); 
+         
+         
+         
+         if (!validateEmail(email_id)) {
+
+             var myCFC = "myconection.cfc"; //este es el nombre de miarch .cfc
+             var myMethodW={
+                 method:'ValidateEmail', //Nombre del metodo en el cfc
+                 usuario_email: email_id
+             };
+             $.getJSON(myCFC, myMethodW, function(dataW){
+                 console.log(dataW)
+                 if(dataW.DATA.length==0){
+                                                             var intereses="";
+                                                 for(i=1;i<=9;i++){
+                                               if ($("#int"+i).is(':checked')){ 
+                                                   intereses += $("#int"+i).val() + ",";
+                                                   //alert(intereses)
+                                               }; //fin del if
+
+                                                 }; //fin del for
+
+                                                 if(name1.length==0)
+                                                 { alert("No puede dejar el campo Nombre vacío");
+                                                 }
+                                                 else if(last_name1.length==0)
+                                                 { alert("No puede dejar el campo Apellido vacío");
+                                                 }
+                                                 else if(fecha_id.length==0)
+                                                 { alert("No puede dejar el campo Fecha de Nacimiento vacío");
+                                                 }
+                                                 else if(intereses.length==0)
+                                                 { alert("Debe seleccionar al menos un item del campo Intereses");
+                                                 }
+                                                 else
+                                                 {
+                                                  var myCFC = "myconection.cfc"; //este es el nombre de miarch .cfc
+                                                var myMethod={
+                                                method:'InsertUsuario', //Nombre del metodo en el cfc
+                                                    usuario_nombre: name1,
+                                                    usuario_apellido: last_name1,
+                                                    usuario_email: email_id,
+                                                    usuario_pais: pais_id,
+                                                    usuario_fnac: fecha_id,
+                                                    usuario_intereses: intereses,
+                                                    usuario_areat: trabajo_id,
+                                                    usuario_acerca: acerca_id,
+                                                    usuario_sex: sexo_id 
+
+                                                };
+
+                                                      var myMethod2={  // Este es el metodo del EMAIL----------------------------------------
+                                                method:'SendEmail', //Nombre del metodo en el cfc
+
+                                                    usuario_email: email_id
+
+
+                                                }; // FIN DEL myMethod2---------------------------------------------
+
+
+                                                $.getJSON(myCFC, myMethod, function(data){
+                                                          alert(data.DATA[0][0]);
+                                                            console.log(data);
+
+                                                    if(data.DATA[0][0]){
+
+
+                                                $.getJSON(myCFC, myMethod2, function(data2){
+                                                          alert(data.DATA[0][0]);
+                                                            console.log("Data2 Creado:"+data2);
+                                                });
+
+                                                     window.location.replace("/Prueba1/email_creado.html");
+
+                                                    }
+                                                    else
+                                                    {
+                                                        alert("No se pudo realizar la transacción verifique la conexión e intente en unos minutos")
+                                                    };
+
+
+                                                        });// Fin del getJason
+                                                 }; //Fin del Else
+                 }else{
+                     alert("El email que trata de utilizar ya existe")
+                 }
+             });
+         } // Fin del validateEmail
+     }); //Fin Boton save
+            
+            
+            function validateEmail(email_id) {
+var filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+if (filter.test(email_id)) {
+return false;
+}
+else {
+return true;
+}
+} ;
+           
+
+            
+                 }); //Fin Jquer
+         
+         
+           
+    </script>
+ 
+
+</head>
+
+<body>    
+   
+  <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Registro</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li  class="active"><a id="goHomeBtn" href="/index.html">Home</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+     
+      <br>
+     
+
+     <div class="container">
+   
+      <input type="text" class="hidden" id="existe">
+        <div class="panel panel-primary">
+            <div class="panel-heading"><u><h2><center>Honduras, todo está aquí</center></h2></u></div>
+          <div class="panel-body">
+           
+             
+              <p><i><marquee direction = "right">Honduras, todo está aquí:</marquee></i></p>
+              <hr class="featurette-divider">
+              <form role="form">
+                <div class="form-group col-lg-4">
+                  <label for="usr">Nombre:</label>
+                  <input type="text" class="form-control" id="name1">
+                    
+                </div>
+                   <div class="form-group col-lg-4">
+                  <label for="usr">Apellido:</label>
+                  <input type="text" class="form-control" id="last_name1">
+                </div>
+                   
+                   <div class="form-group col-lg-4">
+                  <label for="usr">Email:</label>
+                  <input type="text" class="form-control" id="email_id">
+                </div>
+                <div class="form-group col-lg-4">
+                  <label for="pwd">Password:</label>
+                  <input placeholder="Your password will be sent to your email" type="password" class="form-control" id="lastname1" disabled>
+                </div>
+                    <div class=" form-group col-lg-4">
+                  
+                              <form >
+   <label for="pwd">Fecha de nacimiento:</label> <input id="fecha_id" type="text" name="fecha" class="campofecha" size="12">
+</form>
+                              </select>
+                          
+               </div>
+                  
+                 <div class="form-group col-lg-4">
+                  <label for="pwd">País de Origen:</label>
+                    <form role ="form">
+                                 
+                  <div class="conainer">
+                      <div class="row">
+                          <div class="col-lg-4">
+                             <select class="selectpicker" id="pais_id" data-width="auto">
+<option>Afganistán</option>
+<option >Albania</option>
+<option >Alemania</option>
+<option >Andorra</option>
+<option >Angola</option>
+<option >Anguilla</option>
+<option >Antártida</option>
+<option >Antigua y Barbuda</option>
+<option >Antillas Holandesas</option>
+<option >Arabia Saudí</option>
+<option >Argelia</option>
+<option >Argentina</option>
+<option >Armenia</option>
+<option >Aruba</option>
+<option >Australia</option>
+<option >Austria</option>
+<option >Azerbaiyán</option>
+<option >Bahamas</option>
+<option >Bahrein</option>
+<option >Bangladesh</option>
+<option >Barbados</option>
+<option >Bélgica</option>
+<option >Belice</option>
+<option >Benin</option>
+<option >Bermudas</option>
+<option >Bielorrusia</option>
+<option >Birmania</option>
+<option >Bolivia</option>
+<option >Bosnia y Herzegovina</option>
+<option >Botswana</option>
+<option >Brasil</option>
+<option >Brunei</option>
+<option >Bulgaria</option>
+<option >Burkina Faso</option>
+<option >Burundi</option>
+<option >Bután</option>
+<option >Cabo Verde</option>
+<option >Camboya</option>
+<option >Camerún</option>
+<option >Canadá</option>
+<option >Chad</option>
+<option >Chile</option>
+<option >China</option>
+<option >Chipre</option>
+<option >Ciudad del Vaticano (Santa Sede)</option>
+<option >Colombia</option>
+<option >Comores</option>
+<option >Congo</option>
+<option >Congo, República Democrática del</option>
+<option >Corea</option>
+<option >Corea del Norte</option>
+<option >Costa de Marfíl</option>
+<option >Costa Rica</option>
+<option >Croacia (Hrvatska)</option>
+<option selected>Cuba</option>
+<option>Dinamarca</option>
+<option >Djibouti</option>
+<option >Dominica</option>
+<option >Ecuador</option>
+<option >Egipto</option>
+<option >El Salvador</option>
+<option >Emiratos Árabes Unidos</option>
+<option >Eritrea</option>
+<option >Eslovenia</option>
+<option >España</option>
+<option >Estados Unidos</option>
+<option >Estonia</option>
+<option >Etiopía</option>
+<option >Fiji</option>
+<option >Filipinas</option>
+<option >Finlandia</option>
+<option >Francia</option>
+<option >Gabón</option>
+<option >Gambia</option>
+<option >Georgia</option>
+<option >Ghana</option>
+<option >Gibraltar</option>
+<option >Granada</option>
+<option >Grecia</option>
+<option >Groenlandia</option>
+<option >Guadalupe</option>
+<option >Guam</option>
+<option >Guatemala</option>
+<option >Guayana</option>
+<option >Guayana Francesa</option>
+<option >Guinea</option>
+<option >Guinea Ecuatorial</option>
+<option >Guinea-Bissau</option>
+<option >Haití</option>
+<option >Honduras</option>
+<option >Hungría</option>
+<option >India</option>
+<option >Indonesia</option>
+<option >Irak</option>
+<option >Irán</option>
+<option >Irlanda</option>
+<option >Isla Bouvet</option>
+<option >Isla de Christmas</option>
+<option >Islandia</option>
+<option >Islas Caimán</option>
+<option>Islas Cook</option>
+<option >Islas de Cocos o Keeling</option>
+<option >Islas Faroe</option>
+<option >Islas Heard y McDonald</option>
+<option >Islas Malvinas</option>
+<option >Islas Marianas del Norte</option>
+<option >Islas Marshall</option>
+<option >Islas menores de Estados Unidos</option>
+<option >Islas Palau</option>
+<option >Islas Salomón</option>
+<option >Islas Svalbard y Jan Mayen</option>
+<option >Islas Tokelau</option>
+<option >Islas Turks y Caicos</option>
+<option >Islas Vírgenes (EEUU)</option>
+<option >Islas Vírgenes (Reino Unido)</option>
+<option >Islas Wallis y Futuna</option>
+<option>Israel</option>
+<option >Italia</option>
+<option >Jamaica</option>
+<option >Japón</option>
+<option >Jordania</option>
+<option >Kazajistán</option>
+<option >Kenia</option>
+<option >Kirguizistán</option>
+<option >Kiribati</option>
+<option >Kuwait</option>
+<option >Laos</option>
+<option >Lesotho</option>
+<option >Letonia</option>
+<option >Líbano</option>
+<option >Liberia</option>
+<option >Libia</option>
+<option >Liechtenstein</option>
+<option >Lituania</option>
+<option >Luxemburgo</option>
+<option >Macedonia, Ex-República Yugoslava de</option>
+<option >Madagascar</option>
+<option >Malasia</option>
+<option >Malawi</option>
+<option >Maldivas</option>
+<option >Malí</option>
+<option >Malta</option>
+<option >Marruecos</option>
+<option >Martinica</option>
+<option >Mauricio</option>
+<option >Mauritania</option>
+<option >Mayotte</option>
+<option >México</option>
+<option >Micronesia</option>
+<option >Moldavia</option>
+<option >Mónaco</option>
+<option >Mongolia</option>
+<option >Montserrat</option>
+<option >Mozambique</option>
+<option >Namibia</option>
+<option >Nauru</option>
+<option >Nepal</option>
+<option >Nicaragua</option>
+<option >Níger</option>
+<option >Nigeria</option>
+<option >Niue</option>
+<option >Norfolk</option>
+<option >Noruega</option>
+<option >Nueva Caledonia</option>
+<option >Nueva Zelanda</option>
+<option >Omán</option>
+<option >Países Bajos</option>
+<option >Panamá</option>
+<option >Papúa Nueva Guinea</option>
+<option >Paquistán</option>
+<option >Paraguay</option>
+<option >Perú</option>
+<option >Pitcairn</option>
+<option >Polinesia Francesa</option>
+<option >Polonia</option>
+<option >Portugal</option>
+<option >Puerto Rico</option>
+<option >Qatar</option>
+<option >Reino Unido</option>
+<option >República Centroafricana</option>
+<option >República Checa</option>
+<option >República de Sudáfrica</option>
+<option >República Dominicana</option>
+<option >República Eslovaca</option>
+<option >Reunión</option>
+<option >Ruanda</option>
+<option >Rumania</option>
+<option >Rusia</option>
+<option >Sahara Occidental</option>
+<option >Saint Kitts y Nevis</option>
+<option >Samoa</option>
+<option >Samoa Americana</option>
+<option >San Marino</option>
+<option >San Vicente y Granadinas</option>
+<option >Santa Helena</option>
+<option >Santa Lucía</option>
+<option >Santo Tomé y Príncipe</option>
+<option >Senegal</option>
+<option >Seychelles</option>
+<option >Sierra Leona</option>
+<option >Singapur</option>
+<option >Siria</option>
+<option >Somalia</option>
+<option >Sri Lanka</option>
+<option >St Pierre y Miquelon</option>
+<option >Suazilandia</option>
+<option >Sudán</option>
+<option >Suecia</option>
+<option >Suiza</option>
+<option >Surinam</option>
+<option >Tailandia</option>
+<option >Taiwán</option>
+<option >Tanzania</option>
+<option >Tayikistán</option>
+<option >Territorios franceses del Sur</option>
+<option >Timor Oriental</option>
+<option >Togo</option>
+<option >Tonga</option>
+<option >Trinidad y Tobago</option>
+<option >Túnez</option>
+<option >Turkmenistán</option>
+<option >Turquía</option>
+<option >Tuvalu</option>
+<option >Ucrania</option>
+<option >Uganda</option>
+<option >Uruguay</option>
+<option >Uzbekistán</option>
+<option >Vanuatu</option>
+<option >Venezuela</option>
+<option >Vietnam</option>
+<option >Yemen</option>
+<option >Yugoslavia</option>
+<option >Zambia</option>
+<option >Zimbabue</option>
+                              </select>
+                          </div>
+                          
+                        
+                      </div>
+                     
+                    </div>
+   
+</form>
+                </div>    
+               
+                 
+             
+               
+                
+                <hr class="featurette-divider">
+                  
+                <div class="form-group">
+                    <div class="conainer">
+                      <div class="row">
+                          <div class="col-lg-9">
+                  <label for="pwd">Intereses:</label>
+                  <form role="form" id= 'intereses_id'>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Música" id ="int1">Música
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Teatro" id = "int2">Teatro
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Sexo" id = "int3">Sexo
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Playas" id = "int4">Playas
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Sitios Históricos" id = "int5">Sitios Históricos
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Tecnología" id = "int6">Tecnología
+                    </label>
+                      <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Iglesias" id = "int7">Iglesias
+                    </label>
+                      <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Sitios Arqueológicos" id = "int8">Sitios Arqueológicos
+                    </label>
+                      <label class="checkbox-inline" >
+                      <input type="checkbox" name="sport" value="" id = "int9">Otros
+                    </label>
+                  </form>
+                </div>
+                      
+                      <div class="col-lg-3">
+                           <label for="pwd">Sexo:</label>
+                              <form role ="form">
+                                 
+                  <div class="conainer">
+                      <div class="row">
+                          <div class="col-lg-4">
+                             <select id ="sexo_id" class="selectpicker"  data-width="auto">
+                                <option>Masculino</option>
+                                <option>Femenino</option>
+                                
+                              </select>
+                          </div>
+                        
+                      </div>
+                    </div>
+   
+</form>
+                      
+                          
+               </div>    
+                          
+                           </div>
+                       </div>
+                 </div>
+              
+              
+            <hr class="featurette-divider">  
+                <div class="main row" >
+                    
+                    <div class="col-lg-4">
+                          <label for="pwd">Área de Trabajo:</label>
+                             <select  class="selectpicker" id="trabajo_id" data-width="auto">
+                                 
+                                <option>Ingeniero Industrial</option>
+                                <option>Arquitecto</option>
+                                 <option>Abogado</option>
+                                <option selected>Ingeniero en Sistemas</option>
+                                  <option>Médico</option>
+                                <option>Maestro</option>
+                                  <option>Enfermero(a)</option>
+                                <option>Albañil</option>
+                                  <option>Carpintero</option>
+                                <option>Guarda Espaldas</option>
+                                  <option>Chofer</option>
+                                <option>Marinero</option>
+                                  <option>Policía</option>
+                                <option>Militar</option>
+                                  <option>Piloto</option>
+                                <option>Aeromoso(a)</option>
+                              </select>
+                          </div>
+                    <div class="col-lg-8 col-xs-6">
+                    <label for="pwd">Acerca de Usted:</label>
+                   <textarea placeholder="Gustos y preferencias adicionales" id='acerca_id' class="form-control" rows="5" id="comment"></textarea>
+                </div>
+                          </div>
+                  
+               
+                  
+                  
+              </form>
+                
+              
+              
+          </div>
+          
+          
+            
+        <!-- Pie de página del formulario -->
+          <div  class="panel-footer">
+           
+              <button data-toggle="modal" data-target="#myModal"  id="btnCancelar" type="button" class="btn btn-danger" >Cancelar</button>
+              
+               <button id="bt_save" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Click aquí para guardar la información">Guardar</button>
+          
+          </div>
+        </div>  
+    
+      
+    </div>
+      
+    
+    
+ 
+     <!------------------------------------------------------ FOOTER -------------------------------------------------------------->
+<div class="container">
+      <footer>
+       <p class="pull-right"> <a href="#"> <button type="button" class="btn btn-primary glyphicon glyphicon-circle-arrow-up" data-dismiss="modal"> Back to Top</button></p>
+        <p >&copy; 2015 Company, Inc. &middot;</p>
+      </footer>
+   </div>
+  
+
+</body>
+
+</html>

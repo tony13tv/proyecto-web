@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Formulario</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+    <!-- Bootstrap -->
+   <link href="css/bootstrap.min.css" rel="stylesheet">
+    
+   
+    <!--link href="MyCss/myStyleSheet.css" rel="stylesheet"-->
+      <link href="calendario_dw/calendario_dw-estilos.css" type="text/css" rel="STYLESHEET">
+    
+      
+   <style type="text/css">
+   body{
+      font-family: tahoma, verdana, sans-serif;
+   }
+   </style>
+   <!--script type="text/javascript" src="calendario_dw/jquery-1.4.4.min.js"></script-->
+   <script type="text/javascript" src="calendario_dw/calendario_dw.js"></script>
+    
+      
+  
+   
+   <script type="text/javascript">
+   $(document).ready(function(){
+      $(".campofecha").calendarioDW();
+       
+       
+       
+       
+   });
+   </script>
+   
+      <script type="text/javascript">
+                  
+         //Acción del boton de Cancel
+         function functionGoHome()
+         {
+           
+            window.location ="index.html";
+         }     
+          
+          
+     
+      </script> 
+    
+      
+       
+    
+
+     <script> 
+        $(document).ready(function(){
+            
+            var get_url = window.location.href;
+         var usuario_id = get_url.split('?')[1];
+            
+            
+            
+            
+                 
+             
+            //    AQUI TODO LO DE UPLOAD IMAGE-----------------------------------------
+            
+               // var codio_empleado = $('#emp_code').val();
+                
+                var myCFCf= "myconection.cfc";
+                var myMethodf= {
+                method:'getUfoto',
+                usuario_id:usuario_id
+                   
+                };
+               
+                $.getJSON(myCFCf, myMethodf, function(dataf){
+                   // alert("Estoy dentro del getJeson" +dataf.DATA[0][0].length) ///// Me tare 1 siempre
+                    if  (!dataf.DATA[0][0])
+                    {
+                        alert("Este usuario no ha subido ninguna foto");
+                    }
+                    else
+                    {
+                        var imageTemp="";
+                        var myDirectorySmall= "http://127.0.0.1:8500/Prueba1/Uimages/" +  usuario_id + "/small/" ;
+                        
+                        var myDirectoryPhoto= "http://127.0.0.1:8500/Prueba1/Uimages/" +  usuario_id + "/photos/" ;
+                        
+                        for (i=0;i< dataf.DATA.length; i++)
+                        {
+                            
+                imageTemp+= '<a href="'+ myDirectoryPhoto + dataf.DATA[i][1] + '" ><img value="'+ dataf.DATA[i][0] +'"  src="'+ myDirectorySmall + dataf.DATA[i][0] +  '" class="img-thumbnail"  ></a>';
+                        }
+                        
+                         $("#msgDiv").append(imageTemp);
+                          // $("#foto_img").src(imageTemp);
+                        
+                      }
+                    
+                    
+                    
+                    //alert(data.DATA[0][0]);
+                    console.log(dataf);
+                
+                });
+            
+        
+             
+        //función para subir los archivos
+        function ajaxUpload(dataU){
+          
+               //console.log("ajaxUpload function called");
+        $.ajax({url: "multiFileUploadAction3.cfm?usuario_id=" + usuario_id ,
+        data: dataU,
+        cache: false,
+        contentType: false, //this is need for this to work with coldfusion
+        processData: false, //this is need for this to work with coldfusion
+        type: 'POST',
+        success: function(returnData){
+                    
+            
+var myDirectorySmall= "http://127.0.0.1:8500/Prueba1/Uimages/" +  usuario_id + "/small/" ;
+                        
+ var myDirectoryPhoto= "http://127.0.0.1:8500/Prueba1/Uimages/" +  usuario_id + "/photos/" ;
+            
+            var imageTemp= '<a href="'+ myDirectoryPhoto + returnData + '" ><img value="'+ returnData +'"  src="'+ myDirectorySmall +returnData +  '" ></a>';
+            
+            //page if successfull 
+               $("#msgDiv").append(imageTemp);
+             },
+        error: function(returnData){
+               console.log(returnData);
+               }
+    }); //end .ajax call
+    } //end ajaxUpload function
+                
+            
+            
+            
+            
+            
+            
+            
+            
+            //------------------------------------------------------------
+     
+            
+            
+            
+            
+        
+           // $('#int1').attr('checked', true);
+         
+ 
+            
+            var myCFC1 = "myconection.cfc"; //este es el nombre de miarch .cfc
+        var myMethod3={
+        method:'SelectUsuarioForm', //Nombre del metodo en el cfc
+            usuario_id: usuario_id,
+           
+        };
+              $.getJSON(myCFC1, myMethod3, function(data3){
+                var id= data3.DATA[0][0]
+                var nombre= data3.DATA[0][1]
+                var apellido= data3.DATA[0][2]
+                var email= data3.DATA[0][3]
+                var pass= data3.DATA[0][4]
+                var pais= data3.DATA[0][5]
+                var fechanac= data3.DATA[0][6]
+                var intereses= data3.DATA[0][7]
+                var areat= data3.DATA[0][8]
+                var acerca= data3.DATA[0][9]
+                var foto= data3.DATA[0][10]
+                  var sex= data3.DATA[0][13]
+            
+             
+              
+                    //console.log(data2);
+                  //alert(areat)
+                
+                for(i=0;i<9;i++)
+                {
+                     var intereses2 = intereses.split(',')[i];
+                  
+                if(intereses2=='Música')
+                {
+                  $('#int0').attr('checked', true);
+                }
+                 else if (intereses2=='Teatro')
+                 {
+                     $('#int1').attr('checked', true);
+                 }
+                    
+                    else if (intereses2=='Sexo')
+                 {
+                     $('#int2').attr('checked', true);
+                 }
+                    else if (intereses2=='Playas')
+                 {
+                     $('#int3').attr('checked', true);
+                 }
+                    else if (intereses2=='Sitios Históricos')
+                 {
+                     $('#int4').attr('checked', true);
+                 }
+                    else if (intereses2=='Tecnología')
+                 {
+                     $('#int5').attr('checked', true);
+                 }
+                    else if (intereses2=='Iglesias')
+                 {
+                     $('#int6').attr('checked', true);
+                 }
+                    else if (intereses2=='Sitios Arqueológicos')
+                 {
+                     $('#int7').attr('checked', true);
+                 }
+                    else if (intereses2=='Otros')
+                 {
+                     $('#int8').attr('checked', true);
+                 }
+                    
+                }//Fin del FOR
+                
+               
+             
+              
+          $('#name1').val(nombre);
+          $('#last_name1').val(apellido);
+          $('#email_id').val(email);
+          $('#pais_id').val(pais);
+          $('#acerca_id').val(acerca);
+          $('#sexo_id').val(sex); 
+          $('#trabajo_id').val(areat);
+          $('#fecha_id').val(fechanac); 
+          $('#pass_id').val(pass); 
+                  
+                  
+                 
+                  
+        });
+            
+            
+            
+            
+//-----------BOTON SAVE-----------------------------------------------------------------
+       
+     $('#bt_save').click(function(e){
+         
+            e.preventDefault();
+             //   BOTON PARA SUBIR LA IMAGEN ________________________________________________
+         
+
+            //The jquery.each() similar a un ciclo for que evalua cada archivo agregado
+               
+            $.each($('#multiFile')[0].files, function(i, file) {
+           var dataU = new FormData(); 
+               dataU.append('file-0', file);
+           ajaxUpload(dataU);
+               
+            }); //FIN DEL EACH      
+    
+            
+            ///------------------------------------------------------------------------------
+     
+                 
+         var name1 = $('#name1').val();
+          var passx = $('#pass_id').val();
+         var sex = $('#pass_id').val();
+         var last_name1 = $('#last_name1').val();
+         var email_id = $('#email_id').val();
+         var pais_id = $('#pais_id').val();
+         var acerca_id = $('#acerca_id').val();
+         var sexo_id = $('#sexo_id').val();
+         var trabajo_id = $('#trabajo_id').val();
+         var fecha_id = $('#fecha_id').val(); 
+    
+           var fecha_calc = fecha_id.split('-')[0];
+  
+         
+          var intereses="";
+         for(i=0;i<9;i++){
+       if ($("#int"+i).is(':checked')){ 
+           intereses += $("#int"+i).val() + ",";
+           //alert(intereses)
+       }; //fin del if
+         
+         }; //fin del for
+         
+         if(name1.length==0)
+         { alert("No puede dejar el campo Nombre vacío");
+         }
+         else if(passx.length < 6)
+         { alert("La contraseña debe contener mínimo 6 caracteres")
+         }
+         else if(last_name1.length==0)
+         { alert("No puede dejar el campo Apellido vacío");
+         }
+         else if(fecha_id.length==0)
+         { alert("No puede dejar el campo Fecha de Nacimiento vacío");
+         }
+         else if(intereses.length==0)
+         { alert("Debe seleccionar al menos un item del campo Intereses");
+         }
+          else if(fecha_calc > 1997)
+         { alert("Tiene que tener 18  años mínimo para registrarse");
+         }
+         
+         else
+         {
+          var myCFC = "myconection.cfc"; //este es el nombre de miarch .cfc
+        var myMethod={
+        method:'InsertUsuario2', //Nombre del metodo en el cfc
+            usuario_nombre: name1,
+            usuario_apellido: last_name1,
+            usuario_pais: pais_id,
+            usuario_fnac: fecha_id,
+            usuario_intereses: intereses,
+            usuario_areat: trabajo_id,
+            usuario_acerca: acerca_id,
+            usuario_id: usuario_id,
+            usuario_pass: passx,
+            usuario_sex: sexo_id
+     
+           
+        };
+                    
+        $.getJSON(myCFC, myMethod, function(data){
+         
+            
+                if(data.DATA[0][0].length==0)
+                {
+                alert("Sus datos no se han actualizado. Intente más tarde!")
+                }
+                else
+                {  alert("Sus datos se han actualizado de manera satisfactoria!")
+                  window.location.replace("/Prueba1/principal.html?"+usuario_id);
+                };
+            
+        
+        });
+            
+             }; //Fin del Else   
+                
+                });//Fin Boton save
+       
+         
+              $('#homelb_id').click(function(){
+             
+          window.location.replace("/Prueba1/principal.html?"+usuario_id);
+                          
+         });
+         
+    
+                 
+             }); // Fin de Funcion
+            
+            
+           
+
+         
+         
+         
+           
+    </script>
+ 
+
+</head>
+
+<body>    
+   
+  <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!--a class="navbar-brand" href="#">Registro</a-->
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li  class="active" id="li"><label class="navbar-brand"  for="usr" id="homelb_id">Home</label></li>
+              
+          </ul>
+              
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+     
+      <br>
+     
+
+     <div class="container">
+   
+      
+        <div class="panel panel-primary">
+            <div class="panel-heading"><u><h2><center>Información de Usuario</center></h2></u></div>
+          <div class="panel-body">
+           
+             
+              <form role="form">
+                   <div class="form-group col-lg-4">
+                       <div class = 'well' >
+                  <table border="3" width="150" height="150">
+  <tr>
+    <th  id="msgDiv"><center></center></th>
+    
+  </tr>
+  
+</table>
+                       <br>
+<form action="multiFileUploadAction3.cfm" Method="POST" enctype="multipart/form-data" class="well" id="multiFileFrm">
+    <input type="file" name="multiFile" id="multiFile" multiple />
+                           <br>
+       
+        <cfoutput>
+            <!--input type="hidden"  Name="emp_code" id="emp_code" value="10002"-->  
+        </cfoutput>
+    </form>
+                 
+                  </div>  
+                </div>
+                 
+                     
+                <div class="form-group col-lg-4">
+                  <label for="usr">Nombre:</label>
+                  <input type="text" class="form-control" id="name1">
+                    
+                </div>
+                   <div class="form-group col-lg-4">
+                  <label for="usr">Apellido:</label>
+                  <input type="text" class="form-control" id="last_name1">
+                </div>
+                   
+                   <div class="form-group col-lg-4">
+                  <label for="usr">Email:</label>
+                  <input type="text" class="form-control" id="email_id" disabled>
+                </div>
+                <div class="form-group col-lg-4">
+                  <label for="pwd">Password:</label>
+                  <input  type="password" class="form-control" id="pass_id" >
+                </div>
+                    <div class=" form-group col-lg-4">
+                  
+                              <form >
+   <label for="pwd">Fecha de nacimiento:</label> <input id="fecha_id" type="text" name="fecha" class="campofecha" size="12">
+</form>
+                              </select>
+                          
+               </div>
+                  
+                 <div class="form-group col-lg-4">
+                  <label for="pwd">País de Origen:</label>
+                    <form role ="form">
+                                 
+                  <div class="conainer">
+                      <div class="row">
+                          <div class="col-lg-4">
+                             <select class="selectpicker" id="pais_id" data-width="auto">
+<option>Afganistán</option>
+<option >Albania</option>
+<option >Alemania</option>
+<option >Andorra</option>
+<option >Angola</option>
+<option >Anguilla</option>
+<option >Antártida</option>
+<option >Antigua y Barbuda</option>
+<option >Antillas Holandesas</option>
+<option >Arabia Saudí</option>
+<option >Argelia</option>
+<option >Argentina</option>
+<option >Armenia</option>
+<option >Aruba</option>
+<option >Australia</option>
+<option >Austria</option>
+<option >Azerbaiyán</option>
+<option >Bahamas</option>
+<option >Bahrein</option>
+<option >Bangladesh</option>
+<option >Barbados</option>
+<option >Bélgica</option>
+<option >Belice</option>
+<option >Benin</option>
+<option >Bermudas</option>
+<option >Bielorrusia</option>
+<option >Birmania</option>
+<option >Bolivia</option>
+<option >Bosnia y Herzegovina</option>
+<option >Botswana</option>
+<option >Brasil</option>
+<option >Brunei</option>
+<option >Bulgaria</option>
+<option >Burkina Faso</option>
+<option >Burundi</option>
+<option >Bután</option>
+<option >Cabo Verde</option>
+<option >Camboya</option>
+<option >Camerún</option>
+<option >Canadá</option>
+<option >Chad</option>
+<option >Chile</option>
+<option >China</option>
+<option >Chipre</option>
+<option >Ciudad del Vaticano (Santa Sede)</option>
+<option >Colombia</option>
+<option >Comores</option>
+<option >Congo</option>
+<option >Congo, República Democrática del</option>
+<option >Corea</option>
+<option >Corea del Norte</option>
+<option >Costa de Marfíl</option>
+<option >Costa Rica</option>
+<option >Croacia (Hrvatska)</option>
+<option selected>Cuba</option>
+<option>Dinamarca</option>
+<option >Djibouti</option>
+<option >Dominica</option>
+<option >Ecuador</option>
+<option >Egipto</option>
+<option >El Salvador</option>
+<option >Emiratos Árabes Unidos</option>
+<option >Eritrea</option>
+<option >Eslovenia</option>
+<option >España</option>
+<option >Estados Unidos</option>
+<option >Estonia</option>
+<option >Etiopía</option>
+<option >Fiji</option>
+<option >Filipinas</option>
+<option >Finlandia</option>
+<option >Francia</option>
+<option >Gabón</option>
+<option >Gambia</option>
+<option >Georgia</option>
+<option >Ghana</option>
+<option >Gibraltar</option>
+<option >Granada</option>
+<option >Grecia</option>
+<option >Groenlandia</option>
+<option >Guadalupe</option>
+<option >Guam</option>
+<option >Guatemala</option>
+<option >Guayana</option>
+<option >Guayana Francesa</option>
+<option >Guinea</option>
+<option >Guinea Ecuatorial</option>
+<option >Guinea-Bissau</option>
+<option >Haití</option>
+<option >Honduras</option>
+<option >Hungría</option>
+<option >India</option>
+<option >Indonesia</option>
+<option >Irak</option>
+<option >Irán</option>
+<option >Irlanda</option>
+<option >Isla Bouvet</option>
+<option >Isla de Christmas</option>
+<option >Islandia</option>
+<option >Islas Caimán</option>
+<option>Islas Cook</option>
+<option >Islas de Cocos o Keeling</option>
+<option >Islas Faroe</option>
+<option >Islas Heard y McDonald</option>
+<option >Islas Malvinas</option>
+<option >Islas Marianas del Norte</option>
+<option >Islas Marshall</option>
+<option >Islas menores de Estados Unidos</option>
+<option >Islas Palau</option>
+<option >Islas Salomón</option>
+<option >Islas Svalbard y Jan Mayen</option>
+<option >Islas Tokelau</option>
+<option >Islas Turks y Caicos</option>
+<option >Islas Vírgenes (EEUU)</option>
+<option >Islas Vírgenes (Reino Unido)</option>
+<option >Islas Wallis y Futuna</option>
+<option>Israel</option>
+<option >Italia</option>
+<option >Jamaica</option>
+<option >Japón</option>
+<option >Jordania</option>
+<option >Kazajistán</option>
+<option >Kenia</option>
+<option >Kirguizistán</option>
+<option >Kiribati</option>
+<option >Kuwait</option>
+<option >Laos</option>
+<option >Lesotho</option>
+<option >Letonia</option>
+<option >Líbano</option>
+<option >Liberia</option>
+<option >Libia</option>
+<option >Liechtenstein</option>
+<option >Lituania</option>
+<option >Luxemburgo</option>
+<option >Macedonia, Ex-República Yugoslava de</option>
+<option >Madagascar</option>
+<option >Malasia</option>
+<option >Malawi</option>
+<option >Maldivas</option>
+<option >Malí</option>
+<option >Malta</option>
+<option >Marruecos</option>
+<option >Martinica</option>
+<option >Mauricio</option>
+<option >Mauritania</option>
+<option >Mayotte</option>
+<option >México</option>
+<option >Micronesia</option>
+<option >Moldavia</option>
+<option >Mónaco</option>
+<option >Mongolia</option>
+<option >Montserrat</option>
+<option >Mozambique</option>
+<option >Namibia</option>
+<option >Nauru</option>
+<option >Nepal</option>
+<option >Nicaragua</option>
+<option >Níger</option>
+<option >Nigeria</option>
+<option >Niue</option>
+<option >Norfolk</option>
+<option >Noruega</option>
+<option >Nueva Caledonia</option>
+<option >Nueva Zelanda</option>
+<option >Omán</option>
+<option >Países Bajos</option>
+<option >Panamá</option>
+<option >Papúa Nueva Guinea</option>
+<option >Paquistán</option>
+<option >Paraguay</option>
+<option >Perú</option>
+<option >Pitcairn</option>
+<option >Polinesia Francesa</option>
+<option >Polonia</option>
+<option >Portugal</option>
+<option >Puerto Rico</option>
+<option >Qatar</option>
+<option >Reino Unido</option>
+<option >República Centroafricana</option>
+<option >República Checa</option>
+<option >República de Sudáfrica</option>
+<option >República Dominicana</option>
+<option >República Eslovaca</option>
+<option >Reunión</option>
+<option >Ruanda</option>
+<option >Rumania</option>
+<option >Rusia</option>
+<option >Sahara Occidental</option>
+<option >Saint Kitts y Nevis</option>
+<option >Samoa</option>
+<option >Samoa Americana</option>
+<option >San Marino</option>
+<option >San Vicente y Granadinas</option>
+<option >Santa Helena</option>
+<option >Santa Lucía</option>
+<option >Santo Tomé y Príncipe</option>
+<option >Senegal</option>
+<option >Seychelles</option>
+<option >Sierra Leona</option>
+<option >Singapur</option>
+<option >Siria</option>
+<option >Somalia</option>
+<option >Sri Lanka</option>
+<option >St Pierre y Miquelon</option>
+<option >Suazilandia</option>
+<option >Sudán</option>
+<option >Suecia</option>
+<option >Suiza</option>
+<option >Surinam</option>
+<option >Tailandia</option>
+<option >Taiwán</option>
+<option >Tanzania</option>
+<option >Tayikistán</option>
+<option >Territorios franceses del Sur</option>
+<option >Timor Oriental</option>
+<option >Togo</option>
+<option >Tonga</option>
+<option >Trinidad y Tobago</option>
+<option >Túnez</option>
+<option >Turkmenistán</option>
+<option >Turquía</option>
+<option >Tuvalu</option>
+<option >Ucrania</option>
+<option >Uganda</option>
+<option >Uruguay</option>
+<option >Uzbekistán</option>
+<option >Vanuatu</option>
+<option >Venezuela</option>
+<option >Vietnam</option>
+<option >Yemen</option>
+<option >Yugoslavia</option>
+<option >Zambia</option>
+<option >Zimbabue</option>
+                              </select>
+                          </div>
+                          
+                        
+                      </div>
+                     
+                    </div>
+   
+</form>
+                </div>    
+               
+                 
+             
+               
+                
+                <hr class="featurette-divider">
+                  
+                <div class="form-group">
+                    <div class="conainer">
+                      <div class="row">
+                          <div class="col-lg-9">
+                  <label for="pwd">Intereses:</label>
+                  <form role="form" id= 'intereses_id'>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Música" id ="int0">Música
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Teatro" id = "int1">Teatro
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Sexo" id = "int2">Sexo
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Playas" id = "int3">Playas
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Sitios Históricos" id = "int4">Sitios Históricos
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Tecnología" id = "int5">Tecnología
+                    </label>
+                      <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Iglesias" id = "int6">Iglesias
+                    </label>
+                      <label class="checkbox-inline">
+                      <input type="checkbox" name="sport" value="Sitios Arqueológicos" id = "int7">Sitios Arqueológicos
+                    </label>
+                    
+                      <label class="checkbox-inline" >
+                      <input type="checkbox" name="sport" value="Otros" id = "int8">Otros
+                    </label>
+                  </form>
+                </div>
+                      
+                      <div class="col-lg-3">
+                           <label for="pwd">Sexo:</label>
+                              <form role ="form">
+                                 
+                  <div class="conainer">
+                      <div class="row">
+                          <div class="col-lg-4">
+                             <select id ="sexo_id" class="selectpicker"  data-width="auto">
+                                <option>Masculino</option>
+                                <option>Femenino</option>
+                                
+                              </select>
+                          </div>
+                        
+                      </div>
+                    </div>
+   
+</form>
+                      
+                          
+               </div>    
+                          
+                           </div>
+                       </div>
+                 </div>
+              
+              
+            <hr class="featurette-divider">  
+                <div class="main row" >
+                    
+                    <div class="col-lg-4">
+                          <label for="pwd">Área de Trabajo:</label>
+                             <select  class="selectpicker" id="trabajo_id" data-width="auto">
+                                 
+                                <option>Ingeniero Industrial</option>
+                                <option>Arquitecto</option>
+                                 <option>Abogado</option>
+                                <option selected>Ingeniero en Sistemas</option>
+                                  <option>Médico</option>
+                                <option>Maestro</option>
+                                  <option>Enfermero(a)</option>
+                                <option>Albañil</option>
+                                  <option>Carpintero</option>
+                                <option>Guarda Espaldas</option>
+                                  <option>Chofer</option>
+                                <option>Marinero</option>
+                                  <option>Policía</option>
+                                <option>Militar</option>
+                                  <option>Piloto</option>
+                                <option>Aeromoso(a)</option>
+                              </select>
+                          </div>
+                    <div class="col-lg-8 col-xs-6">
+                    <label for="pwd">Acerca de Usted:</label>
+                   <textarea placeholder="Gustos y preferencias adicionales" id='acerca_id' class="form-control" rows="5" id="comment"></textarea>
+                </div>
+                          </div>
+                  
+               
+                  
+                  
+              </form>
+                
+              
+              
+          </div>
+          
+          
+            
+        <!-- Pie de página del formulario -->
+          <div  class="panel-footer">
+           
+              <button data-toggle="modal" data-target="#myModal"  id="btnCancelar" type="button" class="btn btn-danger" >Cancelar</button>
+              
+               <button id="bt_save" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Click aquí para guardar la información">Guardar</button>
+          
+          </div>
+        </div>  
+    
+      
+    </div>
+      
+    
+     <!--button class="btn btn-primary" id="submitFrm" >Submit</button-->
+ 
+     <!------------------------------------------------------ FOOTER -------------------------------------------------------------->
+<div class="container">
+      <footer>
+       <p class="pull-right"> <a href="#"> <button type="button" class="btn btn-primary glyphicon glyphicon-circle-arrow-up" data-dismiss="modal"> Back to Top</button></p>
+        <p >&copy; 2015 Company, Inc. &middot;</p>
+      </footer>
+   </div>
+  
+
+</body>
+
+</html>

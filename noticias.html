@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Formulario</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="grid.css" type="text/css" rel="STYLESHEET">
+    <!--link href="MyCss/myStyleSheet.css" rel="stylesheet"-->
+    <link href="calendario_dw/calendario_dw-estilos.css" type="text/css" rel="STYLESHEET">
+    
+    <style type="text/css">
+        body {
+            font-family: tahoma, verdana, sans-serif;
+        }
+    </style>
+    <!--script type="text/javascript" src="calendario_dw/jquery-1.4.4.min.js"></script-->
+    <script type="text/javascript" src="calendario_dw/calendario_dw.js"></script>
+    <script>
+        $(document).on('ready', function () {
+            var get_url = window.location.href;
+            var usuario_id = get_url.split('?')[1];
+            
+            var categorias = ['Turismo', 'Deportes', 'Fauna', 'Nacionales', 'Internacionales', 'Otras'];
+            $(categorias).each(function(){
+                var categoria = this;
+                //-------------------------------------------------Cargar todas las noticias que están en la bd
+                var myCFCN = "myconection.cfc";
+                var myMethodN = {
+                    method: 'GetNoticia',
+                    categoria: categoria
+                };
+
+                $.getJSON(myCFCN, myMethodN, function (dataN) {
+                    if (dataN.DATA.length == 0) {
+                        //alert("No se pudo hacer la consulta a la BD");
+                    } else {
+                        if(dataN.DATA.length > 0) {
+                            $('#mainrow1').append('<div id="'+categoria+'" class="clearfix well"><h2 class=text-center>'+categoria+'</h2></div>');
+                        }
+                        for (var i = 0; i < dataN.DATA.length; i++) {
+
+                            //Creo noticia Dinamica de BD-------------------------------------------------------
+
+
+                            var id = dataN.DATA[i][0]
+
+                            $.get('myconection.cfc', {
+                                method: 'thumbnailNoticia',
+                                noticia: id,
+                                usuario: usuario_id
+                            }, function (data) {
+                                console.log(data);
+                                $('#'+categoria).append(data);
+                            });
+                            //---------------------------------------------------------------------------
+                        }
+                    }  // Fin del else
+                    //alert(data.DATA[0][0]);
+                    //console.log(data);
+
+                });
+
+                //-----------------------------------------------------------------------------------
+            
+            });
+            $('#comentario').val('').keyup(function (e) {
+                if (e.which == 13) {  // detect the enter key
+                    $('#bt_crear_1').click(); // fire a sample click,  you can do anything
+                }
+            });
+            
+            $('#bt_crear_1').click(function () {
+                var d = new Date();
+                var curr_date = d.getDate();
+                var curr_month = d.getMonth() + 1;
+                var curr_year = d.getFullYear();
+                var curr_hour = d.getHours();
+                var curr_minutes = d.getMinutes();
+                var curr_seconds = d.getSeconds();
+                var fecha = curr_date + "/" + curr_month + "/" + curr_year + "," + curr_hour + ":" + curr_minutes;
+
+                var yatusabes2 = $('#titulo').val();
+                var yatusabes = $('#comentario').val();
+                var category = $('#category').val();
+                var todo = $('#mainrow1').html();
+                if (yatusabes.length == 0 || yatusabes2.length == 0) {
+                    alert("Error de Sentido Común: No puede dejar el campo Título o Comentario vacío!")
+                } else if (yatusabes.length > 100) {
+                    alert("Máximo permitido 100 caracteres!")
+                }
+                
+                // AQUI TODOOOOOOOOOOOOO LO NUEVO--------------------------------------   
+
+                var myCFC = "myconection.cfc"; //este es el nombre de miarch .cfc
+                var myMethod = {
+                    method: 'InsertNoticia', //Nombre del metodo en el cfc
+                    noticia_titulo: yatusabes2,
+                    noticia_descripcion: yatusabes,
+                    noticia_fecha: fecha,
+                    usuario_id: usuario_id,
+                    categoria: category
+                };
+
+                $.getJSON(myCFC, myMethod, function (data) {
+                    console.log(data.DATA[0][0])
+                    if (data.DATA[0].length == 0) {
+                        alert("La noticia no se pudo cargar. Intente más tarde!")
+                    } else {
+                        $('#direcc_img').val(data.DATA[0][0])
+                        if ($('#multiFile')[0].files.length == 0) {
+                            $.get('myconection.cfc', {
+                                method: 'thumbnailNoticia',
+                                noticia: data.DATA[0][0],
+                                usuario: usuario_id
+                            }, function (data) {
+                                console.log(data);
+                                $('#'+category).find('h2').after(data);
+                            });
+                            $('#comentario').val('');
+                            $('#titulo').val('');
+                        } else {
+                            $.each($('#multiFile')[0].files, function (i, file) {
+                                var dataU = new FormData();
+                                dataU.append('file-0', file);
+                                ajaxUpload(dataU);
+                            }); //FIN DEL EACH  
+                        }
+                        alert("La noticia fue creada de manera satisfactoria!")
+                    }
+
+                    //función para subir los archivos
+                    function ajaxUpload(dataU) {
+
+                        //console.log("ajaxUpload function called");
+                        $.ajax({
+                            url: "multiFileUploadActioN.cfm?noticia_id=" + data.DATA[0][0],
+                            data: dataU,
+                            cache: false,
+                            contentType: false, //this is need for this to work with coldfusion
+                            processData: false, //this is need for this to work with coldfusion
+                            type: 'POST',
+                            success: function (returnData) {
+                                $.get('myconection.cfc', {
+                                    method: 'thumbnailNoticia',
+                                    noticia: data.DATA[0][0],
+                                    usuario: usuario_id
+                                }, function (data) {
+                                    console.log(data);
+                                    $('#'+category).find('h2').after(data);
+                                });
+                                $('#comentario').val('');
+                                $('#titulo').val('');
+                                $('#multiFile').closest('form')[0].reset();
+                            },
+                            error: function (returnData) {
+                                console.log(returnData);
+                            }
+                        }); //end .ajax call
+                    } //end ajaxUpload function
+                });  // Fin del getJason
+                //------------------------------------------------------------------------
+            }); // Fin de bt_crear_1
+        }); // Fin JQUERY
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Noticias</a>
+
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a id="goHomeBtn" href="/index.html">Home</a></li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+            <form class="navbar-form navbar-right">
+                <!--
+                  <div class="form-group">               
+                   <a href="#myModal" data-toggle="modal"> <button type="submit" class="btn btn-success" id = "bt_crear">Crear</button>  </a>
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-success" id = "bt_editar">Editar</button>  
+                  </div>
+                        <div class="form-group">
+                  <button type="submit" class="btn btn-success" id = "bt_borrar">Borrar</button>  
+                       </div> -->
+            </form>
+        </div>
+    </nav>
+
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row">
+                <div class=" col-lg-6 col-sm-6">
+                    <div class='well'>
+                        <!--table border="3" width="150" height="150">
+                          <tr>
+                                <th  id="msgDiv"><center></center></th>
+          
+                          </tr>
+                       </table><br-->
+                        <form action="multiFileUploadActioN.cfm" Method="POST" enctype="multipart/form-data"
+                              class="well" id="multiFileFrm">
+                            <input type="file" name="multiFile" id="multiFile" multiple/>
+                            <br>
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class=" col-lg-6 col-sm-6">
+                    <label for="titulo">Título:</label>
+                    <input type="text" id="titulo" placeholder="" class="form-control">
+                    <input type="hidden" placeholder="" class="form-control" id="direcc_img">
+                    <br>
+                    <label for="category">Categoría:</label>
+                    <select name="category" id="category" class="form-control">
+                        <option value="Turismo">Turismo</option>
+                        <option value="Nacionales">Nacionales</option>
+                        <option value="Internacionales">Internacionales</option>
+                        <option value="Fauna">Flora y Fauna</option>
+                        <option value="Deportes">Deportes</option>
+                        <option value="Otras">Otras</option>
+                    </select>
+                    <br>
+                    <label for="comentario">Descripción:</label>
+                    <textarea placeholder="" class="form-control" id="comentario" rows="6" cols="50">
+                        
+                    </textarea>
+                    <br>
+
+                    <p class="pull-right">
+                        <button type="submit" class="btn btn-success" id="bt_crear_1">Crear</button>
+                    </p>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+    <div class="container marketing">
+        <!-- Comienza--------------------------------------------------------------------------------------- -->
+        <div class="row" id="mainrow1">
+            <!-- Aqui todo es dinámico------------------------------------------------------------------------->
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="container">
+        <footer>
+            <p class="pull-right"><a href="#">
+                <button type="button" class="btn btn-primary glyphicon glyphicon-circle-arrow-up" data-dismiss="modal">
+                    Back to Top
+                </button>
+            </a></p>
+            <p>&copy; 2015 Company, Inc. &middot;</p>
+        </footer>
+    </div>
+    <div class="modal fade" id="viewNoticia">
+
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('body').delegate('a[data-toggle=modal]', 'click', function (e) {
+                e.preventDefault();
+                console.log(this);
+                var href = this.href;
+                $($(this).data('target')).load(href);
+
+                $($(this).data('target')).modal('show');
+                return false;
+            }).delegate('a[data-delete=true]', 'click', function (e) {
+                e.preventDefault();
+                var href = this.href;
+                if ($(this).data('confirm') == true) {
+                    if (confirm('¿Esta seguro que desea borrar esta noticia?')) {
+                        $.ajax({
+                            url: href,
+                            success: function (data) {
+                                data = $.parseJSON(data);
+                                console.log(data);
+                                if (data.DATA.length) {
+                                    alert('La noticia ha sido eliminada.');
+                                    $('#noticia-' + data.DATA[0][0]).remove();
+                                } else {
+                                    alert('La noticia no le pertenece o no existe.');
+                                }
+                            }
+                        });
+                    }
+                }
+                return false;
+            }).delegate('a[data-edit=true]', 'click', function (e) {
+                e.preventDefault();
+                var href = this.href, target = $(this).data('target');
+                $.ajax({
+                    url: href,
+                    success: function (data) {
+                        try {
+                            data = $.parseJSON(data);
+                            alert('La noticia no le pertenece o no existe.');
+                        } catch (e) {
+                            $(target).html(data);
+                            $(target).modal('show');
+                        }
+
+                    }
+                });
+                return false;
+            }).delegate('form[data-edit=true]', 'submit', function (e) {
+                e.preventDefault();
+                var href = this.action, formData = $(this).serialize();
+                console.log(formData);
+                $.ajax({
+                    url: href,
+                    data: formData,
+                    success: function (data) {
+                        data = $.parseJSON(data);
+                        if (data.DATA.length > 0) {
+                            var usuario_id = window.location.href.split('?')[1];
+                            var getData = formData;
+                            getData.method = 'thumbnailNoticia';
+                            $.get('myconection.cfc', {
+                                method: 'thumbnailNoticia',
+                                usuario: 1000,
+                                noticia: data.DATA[0][0]
+                            }, function (ret) {
+                                $('#noticia-' + data.DATA[0][0]).replaceWith(ret);
+                            });
+
+                            alert("La noticia fue actualizada exitosamente.")
+                            $('#viewNoticia').modal('hide');
+                        }
+                    }
+                });
+                return false;
+            }).delegate('a[data-like=true]', 'click', function (e) {
+                e.preventDefault();
+                var href = this.href;
+                $.ajax({
+                    url: href,
+                    success: function (data) {
+                        data = $.parseJSON(data);
+                        $('#noticia-' + data.DATA[0][0]).find('[data-like]').text("Like " + data.DATA[0][1]);
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

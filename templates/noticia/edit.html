@@ -1,0 +1,19 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="myconection.cfc?method=saveNoticia&noticia=$ID" method="GET" data-edit="true">
+        <div class="modal-header">$Title</div>
+        <div class="modal-body clearfix">
+            <input type="hidden" value="$Usuario">
+                <div class="col-xs-6">
+                   <input value="$Title" name="n_titulo"/>
+                </div>
+                <div class="col-xs-6">
+                    <textarea name="n_descripcion">
+                        $Content
+                    </textarea>
+                </div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-success">Guardar</button><a class="btn btn-default" data-dismiss="modal">Cancelar</a></div>
+            </form>
+    </div>
+</div>

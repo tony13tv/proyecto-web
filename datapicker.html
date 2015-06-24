@@ -1,0 +1,146 @@
+<html>
+<head>
+<title>Email Validation</title>
+<!-- Include js File Here -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+     <!-- Bootstrap -->
+   <link href="css/bootstrap.min.css" rel="stylesheet">
+    
+   
+    <!--link href="MyCss/myStyleSheet.css" rel="stylesheet"-->
+      <link href="calendario_dw/calendario_dw-estilos.css" type="text/css" rel="STYLESHEET">
+    
+      
+   <style type="text/css">
+   body{
+      font-family: tahoma, verdana, sans-serif;
+   }
+   </style>
+   <script type="text/javascript" src="calendario_dw/jquery-1.4.4.min.js"></script>
+   <script type="text/javascript" src="calendario_dw/calendario_dw.js"></script>
+    
+
+    
+         <script>
+             
+             
+               $(document).ready(function(){
+            
+            var get_url = window.location.href;
+         var usuario_id = get_url.split('?')[1];
+            
+     //    AQUI TODO LO DE UPLOAD IMAGE-----------------------------------------
+            
+               // var codio_empleado = $('#emp_code').val();
+                
+                var myCFCf= "myconection.cfc";
+                var myMethodf= {
+                method:'getUfoto',
+                usuario_id:usuario_id
+                   
+                };
+               
+                $.getJSON(myCFCf, myMethodf, function(dataf){
+                   // alert("Estoy dentro del getJeson" +dataf.DATA[0][0].length) ///// Me tare 1 siempre
+                    if  (!dataf.DATA[0][0])
+                    {
+                        alert("Este usuario no ha subido ninguna foto");
+                    }
+                    else
+                    {
+                        var imageTemp="";
+                        var myDirectorySmall= "http://127.0.0.1:8500/Prueba1/Uimages/" +  usuario_id + "/small/" ;
+                        
+                        var myDirectoryPhoto= "http://127.0.0.1:8500/Prueba1/Uimages/" +  usuario_id + "/photos/" ;
+                        
+                        for (i=0;i< dataf.DATA.length; i++)
+                        {
+                            
+                imageTemp+= '<a href="'+ myDirectoryPhoto + dataf.DATA[i][1] + '" ><img value="'+ dataf.DATA[i][0] +'"  src="'+ myDirectorySmall + dataf.DATA[i][0] +  '" class="img-thumbnail"  ></a>';
+                        }
+                        
+                         $("#msgDiv").append(imageTemp);
+                          // $("#foto_img").src(imageTemp);
+                        
+                      }
+                    
+                    
+                    
+                    //alert(data.DATA[0][0]);
+                    console.log(dataf);
+                
+                });
+            
+            //   BOTON PARA SUBIR LA IMAGEN ________________________________________________
+            
+            
+            
+           $('#submitFrm').click(function(e){
+            e.preventDefault();
+
+            //The jquery.each() similar a un ciclo for que evalua cada archivo agregado
+               
+            $.each($('#multiFile')[0].files, function(i, file) {
+           var dataU = new FormData(); 
+               dataU.append('file-0', file);
+           ajaxUpload(dataU);
+               
+            }); //FIN DEL EACH      
+        }); //FIN BOTON  
+            
+            
+             
+        //función para subir los archivos
+        function ajaxUpload(dataU){
+          
+               //console.log("ajaxUpload function called");
+        $.ajax({url: "multiFileUploadAction3.cfm?usuario_id=" + usuario_id ,
+        data: dataU,
+        cache: false,
+        contentType: false, //this is need for this to work with coldfusion
+        processData: false, //this is need for this to work with coldfusion
+        type: 'POST',
+        success: function(returnData){
+                    
+            
+var myDirectorySmall= "http://127.0.0.1:8500/Prueba1/Uimages/" +  usuario_id + "/small/" ;
+                        
+ var myDirectoryPhoto= "http://127.0.0.1:8500/Prueba1/Uimages/" +  usuario_id + "/photos/" ;
+            
+            var imageTemp= '<a href="'+ myDirectoryPhoto + returnData + '" ><img value="'+ returnData +'"  src="'+ myDirectorySmall +returnData +  '" ></a>';
+            
+            //page if successfull 
+               //$("#msgDiv").append(imageTemp);
+             },
+        error: function(returnData){
+               console.log(returnData);
+               }
+    }); //end .ajax call
+    } //end ajaxUpload function
+                
+            
+            
+            
+            
+           });  
+            
+            
+            
+            //------------------------------------------------------------
+     
+                                                      </script>
+  
+</head>
+    
+    <form action="multiFileUploadAction3.cfm" Method="POST" enctype="multipart/form-data" class="well" id="multiFileFrm">
+    <input type="file" name="multiFile" id="multiFile" multiple />
+                           <br>
+           <button class="btn btn-primary" id="submitFrm" >Submit</button>
+       
+        <cfoutput>
+            <!--input type="hidden"  Name="emp_code" id="emp_code" value="10002"-->  
+        </cfoutput>
+    </form>
+
+</body>
+</html>
